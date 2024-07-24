@@ -1,8 +1,8 @@
-name: hello-world
+name: hello-world-build-n-test
 on: push
 
 jobs:
-  hello-world-job:
+  hello-world-build-n-test-job:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -31,3 +31,17 @@ jobs:
           # compression-level: # optional, default is 6
           # If true, an artifact with a matching name will be deleted before a new one is uploaded. If false, the action will fail if an artifact for the given name already exists. Does not fail if the artifact does not exist.
           # overwrite: # optional, default is false
+
+  # Another job named "run-tests-job":
+  run-tests-job:
+    needs: hello-world-build-n-test-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Prep to use node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm install
+      - run: npm test
